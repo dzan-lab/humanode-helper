@@ -1,0 +1,21 @@
+http:
+  routers:
+    whoamiRouter:
+      rule: "Host(`{{env "HOST_FQDN"}}`) && ClientIP(`{{env "CLIENT_IP"}}`)"
+      service: whoamiService
+      tls:
+        certResolver: myresolver
+      entrypoints:
+        - websecure
+    traefik-dashboard-http-router:
+      entrypoints:
+        - websecure
+      rule: "(PathPrefix(`/api`) || PathPrefix(`/dashboard`)) && ClientIP(`{{env "CLIENT_IP"}}`)"
+      service: api@internal
+      tls:
+        certResolver: myresolver
+  services:
+    whoamiService:
+      loadBalancer:
+        servers:
+          - url: {{env "WS_URL"}}

@@ -1,0 +1,11 @@
+/.env
+/.vscode
+/config/*
+/data/*
+/logs/*
+.DS_Store
+*.session
+traefik/logs/*
+!traefik/logs/access_empty.json
+traefik/letsencrypt/*
+!traefik/letsencrypt/acme_empty.json

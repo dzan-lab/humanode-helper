@@ -1,0 +1,48 @@
+version: "3.4"
+
+services:
+  helper:
+    image: dzan/humahelper
+    build:
+      context: .
+      network: host
+    container_name: humanode-helper
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./scripts:/usr/local/humanode
+      - .env:/usr/local/humanode/.env
+
+  traefik:
+    image: "traefik:latest"
+    container_name: "huma-traefik"
+    environment:
+      # RPC, HOST_FQDN, CLIENT_IP are used in traefik traefik_dynamic_conf.yml file !
+      - WS_URL
+      - HOST_FQDN
+      - CLIENT_IP
+    command:
+      - "--api=true"
+      - "--api.dashboard=true"
+      - "--log.level=WARN"
+      - "--log.filePath=/logs/access.log"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.websecure.address=:443"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.traefik.address=:${DASHBOARD_PORT:-8080}"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--providers.file.filename=/traefik_dynamic_conf.yml"
+    expose:
+      - "443"
+      - "80"
+    volumes:
+      - "./traefik/letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/traefik_dynamic_conf.yml:/traefik_dynamic_conf.yml"
+      - "./traefik/logs:/logs"
+    network_mode: host
+    labels:
+      - "traefik.enable=true"
