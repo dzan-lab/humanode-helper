@@ -10,7 +10,44 @@ If the response is similar to the following, the RPC is available:
 ```json
 {"jsonrpc":"2.0","result":{"Active":{"expires_at":1713262470000}},"id":1}
 ```
+A service file is advised to be used to control humanode.  
+Example of a service file
+```bash
+sudo nano /etc/systemd/system/humanode.service
+[Unit]
+Description=Humanode Service
+After=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
 
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=5
+TimeoutSec=900
+User=root
+Nice=0
+LimitNOFILE=200000
+# Path to directory with humanode bin file
+WorkingDirectory=/root/humanode-mainnet
+ExecStart=/root/humanode-mainnet/humanode-peer \
+        --validator \
+        --name=your_node_name \
+        --chain=chainspec.json \
+        --ws-port=9944 \
+        --rpc-cors=all \
+        --rpc-url=wss://your_domen.com
+
+KillSignal=SIGHUP
+[Install]
+WantedBy=multi-user.target
+```
+Enable and control service
+```bash
+sudo systemctl enable humanode
+sudo systemctl daemon-reload
+sudo systemctl restart humanode
+```
 # Installation  
 
 ```bash
