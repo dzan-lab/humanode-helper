@@ -12,49 +12,24 @@ If the response is similar to the following, the RPC is available:
 ```
 
 # Installation  
-There are two ways to install the script:
-1. Using directly the script (requires installation of some python dependencies and tmux)  
 
 ```bash
-git clone https://github.com/vilija19/humanode-alert.git
-cd ~/humanode-alert/
-sudo apt update
-sudo apt install python3-pip tmux
-tmux
-cd ~/humanode-alert/
-pip install python-dotenv
-pip install requests
-cp .env.example .env
-```
-Edit the .env file and add the required values.  
-Start the script:
-```bash
-./check_node.py
-```
-Script will be run in tmux session, so you can detach from the session and close the terminal.  
-To reattach to the session, use the following command:
-```bash
-tmux a
-```
-2. Using docker (requires of installed docker)
-```bash
-git clone https://github.com/vilija19/humanode-alert.git
-cd ~/humanode-alert/
+git clone https://github.com/dzan-lab/humanode-helper.git
+cd ~/humanode-helper/
 cp .env-example .env
 ```
 Edit the .env file and add the required values.  
-Start the script:
+Start the helper:
 ```bash
-./build.sh
-./start.sh
+docker-compose up -d
 ```
-To stop the script:
+To stop the helper:
 ```bash
-docker stop humanode-alert
+docker-compose stop
 ```
-To start or restart the script after changes in the .env file:
+To start or restart the helper after changes in the .env file:
 ```bash
-docker restart humanode-alert
+docker-compose up -d --no-deps --build  --force-recreate
 ```
 # Telegram bot
 To create a Telegram bot, you need to follow the instructions:
