@@ -1,7 +1,23 @@
 # Description
-This script checks the Bioauth of the Humanode node and sends an alert in Telegram if the Bioauth is expired, about to expire on not answering.  
-*SLEEP_TIMEOUT* in the .env file is the time in seconds between checks.  
+This application is designed to help manage the Humanode node.  
+Main features:
+* Checks the Bioauth status of the Humanode node and sends an alert in Telegram if the Bioauth is expired and about to expire.
+* Checks the availability of the Humanode node RPC and sends an alert in Telegram if the RPC is not available (node down or not responding).
+* Check the Humanode node's sync status and send an alert in Telegram if the node is not synced.
+* Provide a permanent Humanode RPC URL for the node. (NGROK is not used due to tunnel downs and RPC URL changes)
+
+# Requirements
+* Public static IP address
+* Domain name
+* Python 3.6+
+* Docker
+* Telegram bot token
+* Telegram chat id
+
+# Some additional information
+Web access to Humanode Bioauth will permitted from CLIENT_IP only. (CLIENT_IP is defined in .env file)  
 Script should be run on the same machine as the Humanode node.  
+*SLEEP_TIMEOUT* in the .env file is the time in seconds between checks. (How often node will be checked for health)  
 To check availability humanode RPC you can use the following command:
 ```bash
 curl http://127.0.0.1:9933 -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"bioauth_status","params":[],"id":1}'
@@ -86,6 +102,3 @@ To create a Telegram bot, you need to follow the instructions:
 
 Example of alerts:  
 ![ScreenShot](https://raw.github.com/vilija19/storage/main/2024-04-18_17-30.png)  
-
-Tips to:  
-hmp43ibc1Np1RL6KFwBThBBQpJC5bgoH9HkDVcfhr8NV35s3R
